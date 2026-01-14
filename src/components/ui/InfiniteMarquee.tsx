@@ -20,14 +20,20 @@ export default function InfiniteMarquee({
     const marqueeRef = useRef<HTMLDivElement>(null);
     const [animationDuration, setAnimationDuration] = useState(30);
     const [isPaused, setIsPaused] = useState(false);
+    const [hasMounted, setHasMounted] = useState(false);
+
+    // Mark as mounted to avoid hydration mismatch
+    useEffect(() => {
+        setHasMounted(true);
+    }, []);
 
     useEffect(() => {
-        if (marqueeRef.current) {
+        if (hasMounted && marqueeRef.current) {
             const contentWidth = marqueeRef.current.scrollWidth / 2;
             // Adjust duration based on content width for consistent speed perception
             setAnimationDuration(contentWidth / speed);
         }
-    }, [speed, children]);
+    }, [speed, children, hasMounted]);
 
     return (
         <div
@@ -39,7 +45,11 @@ export default function InfiniteMarquee({
                 ref={marqueeRef}
                 className="inline-flex"
                 style={{
-                    animation: `marquee ${animationDuration}s linear infinite`,
+                    // Use individual properties instead of shorthand to avoid conflicts
+                    animationName: "marquee",
+                    animationDuration: `${animationDuration}s`,
+                    animationTimingFunction: "linear",
+                    animationIterationCount: "infinite",
                     animationDirection: direction === "right" ? "reverse" : "normal",
                     animationPlayState: isPaused ? "paused" : "running",
                 }}

@@ -38,9 +38,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} antialiased bg-[#0a0a0a] text-[#e5e5e5]`}
+        suppressHydrationWarning
       >
         {/* Animated Grid Background */}
         <div className="grid-background" aria-hidden="true" />
