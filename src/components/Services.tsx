@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
     Globe,
@@ -25,7 +26,7 @@ interface Package {
     icon: typeof Globe;
     features: string[];
     popular?: boolean;
-    paystackLink?: string;
+    amountKobo?: number;
     whatsappMessage: string;
 }
 
@@ -35,6 +36,7 @@ const packages: Package[] = [
         title: "Basic",
         subtitle: "Static website",
         price: "₦200k",
+        amountKobo: 20000000,
         type: "fixed",
         icon: Globe,
         features: [
@@ -46,7 +48,6 @@ const packages: Package[] = [
             "Fast Loading Speed",
             "1-Week Delivery",
         ],
-        paystackLink: "https://paystack.com/pay/keraunos-basic",
         whatsappMessage:
             "Hello Keraunos Labs! I want to order the Basic Package (₦200k). When can we start?",
     },
@@ -55,6 +56,7 @@ const packages: Package[] = [
         title: "Business",
         subtitle: "CMS & E-Commerce",
         price: "₦600k",
+        amountKobo: 60000000,
         type: "fixed",
         icon: Briefcase,
         features: [
@@ -67,7 +69,6 @@ const packages: Package[] = [
             "2-Week Delivery",
         ],
         popular: true,
-        paystackLink: "https://paystack.com/pay/keraunos-business",
         whatsappMessage:
             "Hello Keraunos Labs! I want to order the Business Package (₦600k). When can we start?",
     },
@@ -113,10 +114,37 @@ const cardVariants = {
 };
 
 export default function Services() {
-    const handleAction = (pkg: Package) => {
-        if (pkg.type === "fixed" && pkg.paystackLink) {
-            // Direct to Paystack for fixed-price packages
-            window.open(pkg.paystackLink, "_blank");
+    const [isLoading, setIsLoading] = useState<string | null>(null);
+
+    const handleAction = async (pkg: Package) => {
+        if (pkg.type === "fixed" && pkg.amountKobo) {
+            // Prompt for email and initiate Paystack payment
+            const email = prompt("Enter your email to proceed with payment:");
+            if (!email) return;
+
+            setIsLoading(pkg.id);
+            try {
+                const response = await fetch("/api/checkout", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        email,
+                        amount: pkg.amountKobo,
+                        packageName: pkg.title,
+                    }),
+                });
+
+                const data = await response.json();
+                if (data.authorization_url) {
+                    window.location.href = data.authorization_url;
+                } else {
+                    alert(data.error || "Payment initialization failed");
+                }
+            } catch {
+                alert("Payment error. Please try again.");
+            } finally {
+                setIsLoading(null);
+            }
         } else {
             // Open WhatsApp for custom packages
             const message = encodeURIComponent(pkg.whatsappMessage);
@@ -215,12 +243,18 @@ export default function Services() {
                                 {/* CTA Button */}
                                 <button
                                     onClick={() => handleAction(pkg)}
-                                    className={`w-full py-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all ${pkg.type === "fixed"
-                                        ? "bg-[#00f3ff] text-[#0a0a0a] hover:bg-[#00d4e0] hover:shadow-[0_10px_40px_rgba(0,243,255,0.3)]"
-                                        : "bg-transparent border border-[#00f3ff] text-[#00f3ff] hover:bg-[rgba(0,243,255,0.1)]"
+                                    disabled={isLoading === pkg.id}
+                                    className={`w-full py-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${pkg.type === "fixed"
+                                            ? "bg-[#00f3ff] text-[#0a0a0a] hover:bg-[#00d4e0] hover:shadow-[0_10px_40px_rgba(0,243,255,0.3)]"
+                                            : "bg-transparent border border-[#00f3ff] text-[#00f3ff] hover:bg-[rgba(0,243,255,0.1)]"
                                         }`}
                                 >
-                                    {pkg.type === "fixed" ? (
+                                    {isLoading === pkg.id ? (
+                                        <>
+                                            <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                            Processing...
+                                        </>
+                                    ) : pkg.type === "fixed" ? (
                                         <>
                                             <CreditCard className="w-4 h-4" />
                                             Order Now
