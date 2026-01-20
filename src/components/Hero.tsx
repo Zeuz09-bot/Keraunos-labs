@@ -130,7 +130,7 @@ export default function Hero() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.5, duration: 0.8 }}
-                className="absolute bottom-24 md:bottom-28 left-1/2 -translate-x-1/2"
+                className="absolute bottom-32 md:bottom-28 left-1/2 -translate-x-1/2"
             >
                 <motion.div
                     animate={{ y: [0, 8, 0] }}
