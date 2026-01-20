@@ -5,10 +5,10 @@ import { Linkedin, Twitter, Instagram, Github, ArrowUp } from "lucide-react";
 import Image from "next/image";
 
 const socialLinks = [
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-    { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-    { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
-    { icon: Github, href: "https://github.com", label: "GitHub" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/abbah-abdulsalam-5b12a7372", label: "LinkedIn" },
+    { icon: Twitter, href: "https://twitter.com/biggeztd08", label: "Twitter" },
+    { icon: Instagram, href: "https://instagram.com/abbahabdulsala", label: "Instagram" },
+    { icon: Github, href: "https://github.com/Zeuz09-bot", label: "GitHub" },
 ];
 
 const footerLinks = [

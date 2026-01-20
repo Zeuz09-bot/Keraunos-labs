@@ -140,10 +140,10 @@ export default function Contact() {
                         {/* Social Links */}
                         <div className="flex gap-4">
                             {[
-                                { icon: Linkedin, href: "https://linkedin.com" },
-                                { icon: Twitter, href: "https://twitter.com" },
-                                { icon: Instagram, href: "https://instagram.com" },
-                                { icon: Github, href: "https://github.com" },
+                                { icon: Linkedin, href: "https://www.linkedin.com/in/abbah-abdulsalam-5b12a7372" },
+                                { icon: Twitter, href: "https://twitter.com/biggeztd08" },
+                                { icon: Instagram, href: "https://instagram.com/abbahabdulsala" },
+                                { icon: Github, href: "https://github.com/Zeuz09-bot" },
                             ].map((social, index) => {
                                 const IconComponent = social.icon;
                                 return (
